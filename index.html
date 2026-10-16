@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2b6cb0">
+  <title>לוח תקשורת</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div id="msg" class="msg" aria-live="polite"></div>
+    <div class="msg-actions">
+      <button id="btn-speak" type="button" title="הקרא הכול">🔊 הקרא</button>
+      <button id="btn-back" type="button" title="מחק אחרון">⌫</button>
+      <button id="btn-clear" type="button" title="נקה הודעה">✕</button>
+    </div>
+  </header>
+
+  <nav class="bar">
+    <select id="board-select" aria-label="בחירת לוח"></select>
+    <div id="cats" class="cats" role="tablist"></div>
+    <div class="bar-actions">
+      <button id="btn-edit" type="button" aria-pressed="false">✏️ עריכה</button>
+      <button id="btn-settings" type="button" aria-label="הגדרות">⚙️</button>
+    </div>
+  </nav>
+
+  <main>
+    <div id="grid" class="grid"></div>
+    <p id="notice" class="notice" hidden></p>
+  </main>
+
+  <form id="quick" class="quick" autocomplete="off">
+    <input id="quick-text" type="text" placeholder="הוסף ביטוי לקטגוריה הנוכחית…" aria-label="הוסף ביטוי">
+    <button type="submit">הוסף</button>
+  </form>
+
+  <!-- עריכת פריט -->
+  <dialog id="item-dlg">
+    <form id="item-form" method="dialog">
+      <h2 id="item-title">פריט</h2>
+
+      <label>טקסט על הכפתור *
+        <input name="label" type="text" required>
+      </label>
+      <label>אייקון (אמוג'י, אופציונלי)
+        <input name="icon" type="text" maxlength="8" placeholder="למשל 🍎">
+      </label>
+      <label>מה להקריא (אופציונלי, לשיפור ההגייה)
+        <input name="speak" type="text" placeholder="אם ריק – כמו הטקסט">
+      </label>
+      <label>קטגוריה
+        <select name="category"></select>
+      </label>
+      <label>צבע
+        <input name="color" type="color" value="#fff3c4">
+      </label>
+
+      <fieldset>
+        <legend>תמונה (גוברת על אייקון)</legend>
+        <input id="image-file" type="file" accept="image/*">
+        <div class="row">
+          <img id="image-preview" alt="" hidden>
+          <button id="image-remove" type="button">הסר תמונה</button>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>קול מוקלט</legend>
+        <p id="audio-status" class="muted"></p>
+        <input id="audio-file" type="file" accept="audio/*">
+        <button id="audio-remove" type="button">הסר קול מוקלט</button>
+      </fieldset>
+
+      <div class="dlg-actions" id="item-order" hidden>
+        <span class="muted">סדר בקטגוריה:</span>
+        <button id="item-up" type="button">⬆ הזז למעלה</button>
+        <button id="item-down" type="button">⬇ הזז למטה</button>
+      </div>
+
+      <div class="dlg-actions">
+        <button id="item-delete" type="button" class="danger">מחק</button>
+        <span class="spacer"></span>
+        <button type="button" id="item-cancel">ביטול</button>
+        <button type="submit" class="primary">שמור</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- הגדרות -->
+  <dialog id="settings-dlg">
+    <form method="dialog">
+      <h2>הגדרות</h2>
+
+      <label>קול
+        <select id="voice-select"></select>
+      </label>
+      <p id="voice-warning" class="muted" hidden>
+        לא נמצא קול בעברית במכשיר. בווינדוס: הגדרות ← שעה ושפה ← דיבור ← הוספת קולות ← עברית.
+      </p>
+      <label>מהירות דיבור: <span id="rate-val"></span>
+        <input id="rate" type="range" min="0.5" max="1.5" step="0.1">
+      </label>
+      <label>בלחיצה על כמה כפתורים ברצף
+        <select id="speak-mode">
+          <option value="queue">להקריא בתור</option>
+          <option value="replace">לעצור את הקודם ולהקריא את החדש</option>
+        </select>
+      </label>
+
+      <fieldset>
+        <legend>לוחות</legend>
+        <div class="dlg-actions column">
+          <button id="btn-board-new" type="button">+ לוח חדש</button>
+          <button id="btn-board-rename" type="button">שינוי שם ללוח הנוכחי</button>
+          <button id="btn-board-delete" type="button" class="danger">מחיקת הלוח הנוכחי</button>
+        </div>
+      </fieldset>
+
+      <div class="dlg-actions column">
+        <button id="btn-export" type="button">ייצוא לקובץ</button>
+        <label class="file-btn">ייבוא מקובץ
+          <input id="import-file" type="file" accept="application/json,.json" hidden>
+        </label>
+        <button id="btn-reset" type="button" class="danger">איפוס לברירת המחדל</button>
+      </div>
+      <div class="dlg-actions">
+        <span class="spacer"></span>
+        <button type="submit" class="primary">סגור</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="storage.js"></script>
+  <script src="speech.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

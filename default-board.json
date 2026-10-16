@@ -1,0 +1,58 @@
+{
+  "boards": [
+    {
+      "id": "daily",
+      "name": "יומיומי",
+      "categories": [
+        { "id": "basic", "name": "בסיסי" },
+        { "id": "food", "name": "אוכל ושתייה" },
+        { "id": "requests", "name": "בקשות" }
+      ],
+      "items": [
+        { "id": "b1", "label": "כן", "speak": "כן", "icon": "✅", "color": "#c6f6d5", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b2", "label": "לא", "speak": "לא", "icon": "❌", "color": "#fed7d7", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b3", "label": "תודה", "speak": "תודה", "icon": "🙏", "color": "#fff3c4", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b4", "label": "עזרה", "speak": "עזרה", "icon": "🆘", "color": "#fed7d7", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b5", "label": "אני", "speak": "אני", "icon": "🙋", "color": "#bee3f8", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b6", "label": "את/ה", "speak": "את", "icon": "👉", "color": "#bee3f8", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b7", "label": "רוצה", "speak": "רוצה", "icon": "🤲", "color": "#e9d8fd", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b8", "label": "לא רוצה", "speak": "לא רוצה", "icon": "🚫", "color": "#e9d8fd", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b9", "label": "שלום", "speak": "שלום", "icon": "👋", "color": "#fff3c4", "category": "basic", "image": null, "hasAudio": false },
+        { "id": "b10", "label": "להתראות", "speak": "להתראות", "icon": "👋", "color": "#fff3c4", "category": "basic", "image": null, "hasAudio": false },
+
+        { "id": "a1", "label": "מים", "speak": "מים", "icon": "💧", "color": "#bee3f8", "category": "food", "image": null, "hasAudio": false },
+        { "id": "a2", "label": "אוכל", "speak": "אני רוצה לאכול", "icon": "🍽️", "color": "#c6f6d5", "category": "food", "image": null, "hasAudio": false },
+        { "id": "a3", "label": "לחם", "speak": "לחם", "icon": "🍞", "color": "#faf089", "category": "food", "image": null, "hasAudio": false },
+        { "id": "a4", "label": "תפוח", "speak": "תפוח", "icon": "🍎", "color": "#c6f6d5", "category": "food", "image": null, "hasAudio": false },
+        { "id": "a5", "label": "חלב", "speak": "חלב", "icon": "🥛", "color": "#ffffff", "category": "food", "image": null, "hasAudio": false },
+
+        { "id": "r1", "label": "לצאת", "speak": "אני רוצה לצאת", "icon": "🚶", "color": "#c6f6d5", "category": "requests", "image": null, "hasAudio": false },
+        { "id": "r2", "label": "שירותים", "speak": "אני צריך שירותים", "icon": "🚻", "color": "#bee3f8", "category": "requests", "image": null, "hasAudio": false },
+        { "id": "r3", "label": "לשחק", "speak": "אני רוצה לשחק", "icon": "🎮", "color": "#faf089", "category": "requests", "image": null, "hasAudio": false },
+        { "id": "r4", "label": "עזרה בבקשה", "speak": "בבקשה עזרו לי", "icon": "🙏", "color": "#fed7d7", "category": "requests", "image": null, "hasAudio": false }
+      ]
+    },
+    {
+      "id": "feelings",
+      "name": "רגשות וגוף",
+      "categories": [
+        { "id": "feelings", "name": "רגשות" },
+        { "id": "body", "name": "גוף" }
+      ],
+      "items": [
+        { "id": "f1", "label": "שמח/ה", "speak": "אני שמח", "icon": "😊", "color": "#faf089", "category": "feelings", "image": null, "hasAudio": false },
+        { "id": "f2", "label": "עצוב/ה", "speak": "אני עצוב", "icon": "😢", "color": "#bee3f8", "category": "feelings", "image": null, "hasAudio": false },
+        { "id": "f3", "label": "כועס/ת", "speak": "אני כועס", "icon": "😠", "color": "#fed7d7", "category": "feelings", "image": null, "hasAudio": false },
+        { "id": "f4", "label": "עייף/ה", "speak": "אני עייף", "icon": "😴", "color": "#e2e8f0", "category": "feelings", "image": null, "hasAudio": false },
+        { "id": "f5", "label": "מפחד/ת", "speak": "אני מפחד", "icon": "😨", "color": "#e9d8fd", "category": "feelings", "image": null, "hasAudio": false },
+        { "id": "f6", "label": "מתרגש/ת", "speak": "אני מתרגש", "icon": "🤩", "color": "#faf089", "category": "feelings", "image": null, "hasAudio": false },
+
+        { "id": "g1", "label": "כואב לי", "speak": "כואב לי", "icon": "🤕", "color": "#fed7d7", "category": "body", "image": null, "hasAudio": false },
+        { "id": "g2", "label": "קר לי", "speak": "קר לי", "icon": "🥶", "color": "#bee3f8", "category": "body", "image": null, "hasAudio": false },
+        { "id": "g3", "label": "חם לי", "speak": "חם לי", "icon": "🥵", "color": "#fed7aa", "category": "body", "image": null, "hasAudio": false },
+        { "id": "g4", "label": "רעב לי", "speak": "אני רעב", "icon": "🍽️", "color": "#c6f6d5", "category": "body", "image": null, "hasAudio": false },
+        { "id": "g5", "label": "יש לי כאב ראש", "speak": "יש לי כאב ראש", "icon": "🧠", "color": "#fed7d7", "category": "body", "image": null, "hasAudio": false }
+      ]
+    }
+  ]
+}
