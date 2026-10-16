@@ -51,9 +51,20 @@ async function loadBoards() {
   state.currentCat = board().categories[0]?.id ?? null;
 }
 
+// טוען את לוחות ברירת המחדל, כולל קבצי הקול שמצורפים אליהם
 async function fetchDefaultBoards() {
   const res = await fetch("default-board.json");
-  return (await res.json()).boards;
+  const data = await res.json();
+  await storeAudio(data.audio).catch(() => {});
+  return data.boards;
+}
+
+// שומר קבצי קול (data URL לפי מזהה פריט) באחסון
+async function storeAudio(audio) {
+  for (const [id, dataUrl] of Object.entries(audio || {})) {
+    const blob = await (await fetch(dataUrl)).blob();
+    await Store.set("audio:" + id, blob);
+  }
 }
 
 async function saveBoards(boards = state.boards) {
@@ -531,10 +542,7 @@ async function importBoards(file) {
       notify("הקובץ אינו לוח תקשורת תקין.");
       return;
     }
-    for (const [id, dataUrl] of Object.entries(data.audio || {})) {
-      const blob = await (await fetch(dataUrl)).blob();
-      await Store.set("audio:" + id, blob);
-    }
+    await storeAudio(data.audio);
     state.boards = boards;
     await saveBoards();
     $("#settings-dlg").close();
