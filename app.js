@@ -262,11 +262,15 @@ function openItemDialog(it) {
 
 // מחזיר את האינדקס של הפריט הסמוך באותה קטגוריה (dir = -1 למעלה, 1 למטה), או -1 אם אין
 function neighborIndex(it, dir) {
+  if (!it) return -1;
   const items = board().items;
   let j = items.indexOf(it) + dir;
-  while (j >= 0 && j < items.length && items[j].category !== it.category) j += dir;
+  while (j >= 0 && j < items.length && (!items[j] || items[j].category !== it.category)) {
+    j += dir;
+  }
   return j >= 0 && j < items.length ? j : -1;
 }
+
 
 // מזיז פריט למעלה/למטה בתוך הקטגוריה שלו. סדר המערך קובע את סדר הכפתורים במסך.
 function moveItem(dir) {
