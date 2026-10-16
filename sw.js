@@ -1,5 +1,6 @@
 // Service worker: מאפשר עבודה אופליין. קבצי האפליקציה נשמרים בטעינה הראשונה.
-const CACHE = "comboard-v3";
+// כשיש רשת תמיד מביאים את הגרסה העדכנית מהשרת, וה-cache משמש רק כגיבוי אופליין.
+const CACHE = "comboard-v5";
 const ASSETS = [
   "./",
   "index.html",
@@ -12,7 +13,10 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+  // cache: "reload" עוקף את ה-cache של הדפדפן, אחרת נשמרות גרסאות ישנות של הקבצים
+  e.waitUntil(
+    caches.open(CACHE).then((c) => c.addAll(ASSETS.map((url) => new Request(url, { cache: "reload" }))))
+  );
   self.skipWaiting();
 });
 
@@ -28,16 +32,18 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
   e.respondWith(
-    caches.match(e.request).then(
-      (cached) =>
-        cached ||
-        fetch(e.request)
-          .then((res) => {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(e.request, copy));
-            return res;
-          })
-          .catch(() => caches.match("index.html"))
-    )
+    fetch(e.request, { cache: "no-cache" })
+      .then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() =>
+        caches
+          .match(e.request)
+          .then((cached) => cached || (e.request.mode === "navigate" ? caches.match("index.html") : Response.error()))
+      )
   );
 });

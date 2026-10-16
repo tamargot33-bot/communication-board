@@ -137,9 +137,12 @@ function renderGrid() {
   grid.append(
     h("button", { class: "tile add-tile", type: "button", onclick: () => openItemDialog(null) }, "+")
   );
-  if (!items.length) notify("אין עדיין פריטים בקטגוריה הזו. הוסיפו בעזרת + או בשדה שבתחתית.");
-  else notify("");
+  // מנקים רק את הודעת "קטגוריה ריקה", כדי לא למחוק הודעות שגיאה שהוצגו זה עתה
+  if (!items.length) notify(EMPTY_HINT);
+  else if ($("#notice").textContent === EMPTY_HINT) notify("");
 }
+
+const EMPTY_HINT = "אין עדיין פריטים בקטגוריה הזו. הוסיפו בעזרת + או בשדה שבתחתית.";
 
 // לחיצה רגילה = הקראה. לחיצה ארוכה (600ms) = עריכה של הפריט.
 function bindPress(btn, it) {
@@ -270,7 +273,6 @@ function neighborIndex(it, dir) {
   }
   return j >= 0 && j < items.length ? j : -1;
 }
-
 
 // מזיז פריט למעלה/למטה בתוך הקטגוריה שלו. סדר המערך קובע את סדר הכפתורים במסך.
 function moveItem(dir) {
@@ -525,7 +527,7 @@ async function importBoards(file) {
     const data = JSON.parse(await file.text());
     // תואם גם לגרסה 1 (לוח יחיד)
     const boards = data.boards ?? (data.board ? [{ id: uid(), name: "לוח מיובא", ...data.board }] : null);
-    if (data.format !== "comboard" || !Array.isArray(boards)) {
+    if (data.format !== "comboard" || !Array.isArray(boards) || !boards.length) {
       notify("הקובץ אינו לוח תקשורת תקין.");
       return;
     }
@@ -588,6 +590,7 @@ async function init() {
     await loadBoards();
   } catch {
     notify("טעינת הלוחות נכשלה. יש להפעיל את האתר מהרשת (שרת מקומי), לא מקובץ ישיר.");
+    return;
   }
   render();
   renderMsg();
