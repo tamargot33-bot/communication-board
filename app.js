@@ -38,6 +38,7 @@ async function loadBoards() {
   let boards = null;
   try {
     boards = await Store.get("boards");
+    if (boards) unpackImages(boards, await Store.get("images"));
   } catch {
     notify("לא ניתן לגשת לאחסון המקומי – השינויים לא יישמרו.");
   }
@@ -56,7 +57,38 @@ async function fetchDefaultBoards() {
   const res = await fetch("default-board.json");
   const data = await res.json();
   await storeAudio(data.audio).catch(() => {});
-  return data.boards;
+  return unpackImages(data.boards, data.images);
+}
+
+// תמונות זהות נשמרות פעם אחת: בפריט נשאר "ref:N" שמצביע לרשימת images
+function packImages(boards) {
+  const images = [];
+  const index = new Map();
+  const packed = boards.map((b) => ({
+    ...b,
+    items: b.items.map((it) => {
+      if (typeof it.image !== "string" || !it.image.startsWith("data:")) return it;
+      let i = index.get(it.image);
+      if (i === undefined) {
+        i = images.push(it.image) - 1;
+        index.set(it.image, i);
+      }
+      return { ...it, image: "ref:" + i };
+    }),
+  }));
+  return { boards: packed, images };
+}
+
+// מחזיר את התמונות לפריטים (משנה את הלוחות במקום)
+function unpackImages(boards, images) {
+  for (const b of boards) {
+    for (const it of b.items) {
+      if (typeof it.image === "string" && it.image.startsWith("ref:")) {
+        it.image = images?.[Number(it.image.slice(4))] ?? null;
+      }
+    }
+  }
+  return boards;
 }
 
 // שומר קבצי קול (data URL לפי מזהה פריט) באחסון
@@ -69,7 +101,9 @@ async function storeAudio(audio) {
 
 async function saveBoards(boards = state.boards) {
   try {
-    await Store.set("boards", boards);
+    const packed = packImages(boards);
+    await Store.set("images", packed.images);
+    await Store.set("boards", packed.boards);
   } catch {
     notify("השמירה נכשלה. ייתכן שהאחסון מלא.");
   }
@@ -518,7 +552,8 @@ async function exportBoards() {
       if (blob) audio[it.id] = await blobToDataURL(blob);
     }
   }
-  const data = { format: "comboard", version: 2, boards: state.boards, audio };
+  const { boards, images } = packImages(state.boards);
+  const data = { format: "comboard", version: 3, boards, images, audio };
   const url = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: "application/json" }));
   h("a", { href: url, download: "communication-boards.json" }).click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -542,6 +577,7 @@ async function importBoards(file) {
       notify("הקובץ אינו לוח תקשורת תקין.");
       return;
     }
+    unpackImages(boards, data.images);
     await storeAudio(data.audio);
     state.boards = boards;
     await saveBoards();
