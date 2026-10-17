@@ -203,6 +203,28 @@ legend { padding: 0 6px; color: var(--muted); }
   min-height: 44px;
 }
 
+/* ---------- מסכים קטנים וסיבוב לרוחב: פנל עליון מכווץ ---------- */
+@media (max-width: 600px), (max-height: 500px) {
+  body { font-size: 16px; padding-bottom: 64px; }
+  .top { padding: 6px 8px; gap: 6px; border-bottom-width: 1px; }
+  .msg { min-height: 40px; padding: 3px 6px; font-size: 18px; gap: 4px; }
+  .msg .hint { font-size: 14px; }
+  .chip { padding: 1px 6px; }
+  .msg-actions { gap: 4px; }
+  .msg-actions button,
+  .bar button { min-height: 36px; padding: 6px 10px; font-size: 16px; }
+  .bar { padding: 4px 8px; gap: 6px; }
+  .cats { gap: 6px; }
+  #board-select { min-width: 110px; font-size: 16px; }
+  .bar-actions { gap: 4px; }
+  main { padding: 6px 8px 8px; }
+  .grid { gap: 8px; }
+  .tile { min-height: 84px; font-size: 18px; padding: 6px; }
+  .tile .icon { font-size: 34px; }
+  .tile img { width: 44px; height: 44px; }
+  .quick { padding: 6px 8px; }
+}
+
 @media (min-width: 768px) {
   :root { --tile-min: 150px; }
   body { font-size: 20px; }
