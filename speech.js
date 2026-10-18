@@ -12,6 +12,12 @@ const Speech = (() => {
   let currentAudio = null;
   let queue = []; // טקסטים ממתינים לקול גוגל (מצב "בתור")
   let preferGoogle = Prefs.get("preferGoogle", true); // כשיש שרת: קול גוגל לפני קובץ מוקלט
+  let engine = Prefs.get("engine", "google"); // "google" = קול גוגל כשהשרת זמין, "system" = תמיד קול המערכת
+
+  // קול גוגל פעיל רק אם השרת זמין והמשתמש לא בחר במפורש בקול המערכת
+  function googleActive() {
+    return googleOn && engine === "google";
+  }
 
   function hebrewVoices() {
     if (!supported) return [];
@@ -83,7 +89,7 @@ const Speech = (() => {
   function speakText(text) {
     if (!text) return false;
     if (mode === "replace") stopAll();
-    if (googleOn) {
+    if (googleActive()) {
       if (currentAudio) queue.push(text);
       else playGoogle(text);
       return true;
@@ -93,7 +99,7 @@ const Speech = (() => {
 
   // סדר עדיפויות: קול גוגל (אם השרת פועל ונבחר כך), אחרת קובץ מוקלט של הפריט, אחרת קול המערכת
   async function playItem(item) {
-    if (item.hasAudio && !(preferGoogle && googleOn)) {
+    if (item.hasAudio && !(preferGoogle && googleActive())) {
       try {
         const blob = await Store.get("audio:" + item.id);
         if (blob) {
@@ -125,9 +131,14 @@ const Speech = (() => {
     ready,
     hebrewVoices,
     pickVoice,
-    usingGoogle: () => googleOn,
-    hasVoice: () => googleOn || !!voice,
-    getVoiceName: () => (googleOn ? "Google (שרת מקומי)" : voice ? voice.name : null),
+    usingGoogle: () => googleActive(),
+    hasVoice: () => googleActive() || !!voice,
+    getVoiceName: () => (googleActive() ? "Google (שרת מקומי)" : voice ? voice.name : null),
+    getEngine: () => engine,
+    setEngine(e) {
+      engine = e;
+      Prefs.set("engine", e);
+    },
     setVoice(name) {
       Prefs.set("voiceName", name);
       pickVoice();

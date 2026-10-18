@@ -546,6 +546,7 @@ function openSettings() {
   $("#rate-val").textContent = Speech.getRate().toFixed(1);
   $("#speak-mode").value = Speech.getMode();
   $("#audio-priority").value = Speech.getPreferGoogle() ? "google" : "file";
+  $("#engine-select").value = Speech.getEngine();
   $("#settings-dlg").showModal();
 }
 
@@ -556,6 +557,10 @@ $("#rate").addEventListener("input", (e) => {
 });
 $("#speak-mode").addEventListener("change", (e) => Speech.setMode(e.target.value));
 $("#audio-priority").addEventListener("change", (e) => Speech.setPreferGoogle(e.target.value === "google"));
+$("#engine-select").addEventListener("change", (e) => {
+  Speech.setEngine(e.target.value);
+  refreshVoices();
+});
 
 // ייצוא: כל הלוחות + קבצי קול (כ-data URL) בקובץ JSON אחד
 async function exportBoards() {
