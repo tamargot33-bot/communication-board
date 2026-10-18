@@ -514,7 +514,20 @@ async function deleteBoard() {
 
 function refreshVoices() {
   const sel = $("#voice-select");
+  const warn = $("#voice-warning");
+  warn.dataset.default ??= warn.textContent;
   sel.innerHTML = "";
+
+  if (Speech.usingGoogle()) {
+    // במחשב עם server.py: הקול הוא גוגל, ולכן לא מציגים קולות המערכת
+    sel.append(h("option", { value: "google" }, "Google (שרת מקומי)"));
+    sel.disabled = true;
+    warn.hidden = false;
+    warn.textContent = "מופעל קול גוגל דרך השרת המקומי. בטלפון ובדפדפנים אחרים הקול הוא קול המערכת.";
+    return;
+  }
+
+  warn.textContent = warn.dataset.default;
   const voices = Speech.hebrewVoices();
   if (!voices.length) {
     sel.append(h("option", { value: "" }, "אין קולות בעברית"));
@@ -524,7 +537,7 @@ function refreshVoices() {
     for (const v of voices) sel.append(h("option", { value: v.name }, v.name));
     sel.value = Speech.getVoiceName() ?? "";
   }
-  $("#voice-warning").hidden = Speech.hasVoice();
+  warn.hidden = Speech.hasVoice();
 }
 
 function openSettings() {
@@ -532,6 +545,7 @@ function openSettings() {
   $("#rate").value = Speech.getRate();
   $("#rate-val").textContent = Speech.getRate().toFixed(1);
   $("#speak-mode").value = Speech.getMode();
+  $("#audio-priority").value = Speech.getPreferGoogle() ? "google" : "file";
   $("#settings-dlg").showModal();
 }
 
@@ -541,6 +555,7 @@ $("#rate").addEventListener("input", (e) => {
   $("#rate-val").textContent = Number(e.target.value).toFixed(1);
 });
 $("#speak-mode").addEventListener("change", (e) => Speech.setMode(e.target.value));
+$("#audio-priority").addEventListener("change", (e) => Speech.setPreferGoogle(e.target.value === "google"));
 
 // ייצוא: כל הלוחות + קבצי קול (כ-data URL) בקובץ JSON אחד
 async function exportBoards() {
@@ -636,6 +651,7 @@ async function init() {
     notify("טעינת הלוחות נכשלה. יש להפעיל את האתר מהרשת (שרת מקומי), לא מקובץ ישיר.");
     return;
   }
+  await Speech.ready;
   render();
   renderMsg();
   if (Speech.supported) {

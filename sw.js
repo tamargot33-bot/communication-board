@@ -33,6 +33,9 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
+  // השרת המקומי: הקראה ובדיקת חיים לא נשמרים במטמון
+  const path = new URL(e.request.url).pathname;
+  if (path.endsWith("/tts") || path.endsWith("/health")) return;
   e.respondWith(
     fetch(e.request, { cache: "no-cache" })
       .then((res) => {
