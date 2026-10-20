@@ -123,7 +123,9 @@ function render() {
   renderCats();
   renderGrid();
   $("#btn-edit").setAttribute("aria-pressed", String(state.editMode));
-  $("#btn-edit").textContent = state.editMode ? "✔ סיום עריכה" : "✏️ עריכה";
+  $("#btn-edit").textContent = state.editMode ? "✔" : "✏️";
+  $("#btn-edit").title = state.editMode ? "סיום עריכה" : "עריכה";
+  $("#btn-edit").setAttribute("aria-label", $("#btn-edit").title);
 }
 
 function renderBoardSelect() {

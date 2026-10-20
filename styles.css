@@ -123,6 +123,15 @@ input[type="file"] { width: auto; padding: 4px 0; border: none; }
 .cat.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
 .cat.add { border-style: dashed; color: var(--muted); }
 .bar-actions { display: flex; gap: 6px; }
+/* כפתור עריכה: קטן, רק אימוג'י. מספיק לשלב אחרי .bar button כי יש לו מזהה */
+#btn-edit {
+  width: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+}
 
 /* ---------- grid ---------- */
 main { padding: 8px 16px 16px; }
